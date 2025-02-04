@@ -1,0 +1,30 @@
+# Node.js Abhängigkeiten (falls du npm benutzt)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build- und temporäre Dateien
+dist/
+build/
+.DS_Store
+Thumbs.db
+
+# IDE- und Editor-spezifische Dateien
+.vscode/
+.idea/
+*.swp
+
+# Logs & Debugging-Dateien
+logs/
+*.log
+*.bak
+
+# Umgebungsvariablen & sensible Dateien
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Test- und Dummy-Dateien
+test.html

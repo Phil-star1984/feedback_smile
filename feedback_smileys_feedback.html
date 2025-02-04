@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback-Smileys</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #ff6600; /* Knall-orange */
+        margin: 0;
+        font-family: Arial, sans-serif;
+        touch-action: manipulation;
+        color: white;
+      }
+
+      .logo-abg {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+      }
+
+      .logo-abg img {
+        padding: 1rem;
+        width: 10rem;
+      }
+
+      .emoji-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 30px;
+        width: 100vw;
+        height: 60vh;
+        justify-items: center;
+        align-items: center;
+      }
+
+      .emoji {
+        font-size: 140px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        user-select: none;
+        touch-action: manipulation;
+        filter: drop-shadow(5px 20px 7px rgba(0, 0, 0, 0.3));
+      }
+
+      .grow {
+        animation: grow 0.3s ease;
+      }
+
+      @keyframes grow {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(2.3);
+        }
+      }
+
+      .counter-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 5px;
+      }
+
+      .counter {
+        font-size: 24px;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px 20px;
+        border-radius: 10px;
+      }
+
+      .feedback-box {
+        width: 80%;
+        max-width: 500px;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      textarea {
+        width: 100%;
+        height: 70px;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        resize: none;
+      }
+
+      .submit-button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 18px;
+        background-color: white;
+        color: #ff6600;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo-abg">
+      <img src="/images/logo-farbe.svg" />
+    </div>
+
+    <div class="counter-container">
+      <div class="counter">😀 <span id="count-1">0</span></div>
+      <div class="counter">😊 <span id="count-2">0</span></div>
+      <div class="counter">😐 <span id="count-3">0</span></div>
+      <div class="counter">😕 <span id="count-4">0</span></div>
+      <div class="counter">😠 <span id="count-5">0</span></div>
+      <div class="counter">🤩 <span id="count-6">0</span></div>
+    </div>
+
+    <div class="emoji-container">
+      <!-- Smileys werden per JavaScript hinzugefügt -->
+    </div>
+
+    <div class="feedback-box">
+      <h3 id="quest-1">Was hat dir besonders gefallen oder nicht gefallen?</h3>
+      <textarea
+        id="feedback"
+        placeholder="Schreibe hier dein Feedback..."
+      ></textarea>
+      <button class="submit-button" id="submitButton">Absenden</button>
+    </div>
+
+    <script>
+      const questions = [
+        "Was hat dir besonders gefallen oder nicht gefallen?",
+        "Wie würdest du das Seminar in einem Wort beschreiben?",
+        "Hast du Verbesserungsvorschläge für das nächste Mal?",
+        "Was war dein persönliches Highlight?",
+        "Wie würdest du die Interaktion mit den Teilnehmern bewerten?",
+      ];
+
+      let currentQuestionIndex = 0;
+      const feedbackQuest = document.querySelector("#quest-1");
+
+      // Speichert die Antworten
+      const feedbackData = {
+        emojiResponses: [],
+        textResponses: [],
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const emojis = ["😀", "😊", "😐", "😕", "😠", "🤩"];
+        const counters = new Array(emojis.length).fill(0);
+        const emojiContainer = document.querySelector(".emoji-container");
+        const counterElements = document.querySelectorAll(".counter span");
+        const feedbackQuest = document.querySelector("#quest-1");
+
+        // Dynamisch Emojis erstellen
+        emojis.forEach((emoji, index) => {
+          const emojiElement = document.createElement("div");
+          emojiElement.classList.add("emoji");
+          emojiElement.textContent = emoji;
+
+          // Click & Touch-Event für iPads & Touchscreens
+          emojiElement.addEventListener("click", () => animateEmoji(index));
+          emojiElement.addEventListener("touchstart", (event) => {
+            event.preventDefault();
+            animateEmoji(index);
+          });
+
+          emojiContainer.appendChild(emojiElement);
+        });
+
+        // Animationsfunktion mit nur "grow"-Effekt
+        const animateEmoji = (index) => {
+          const emojiElements = document.querySelectorAll(".emoji");
+          const emoji = emojiElements[index];
+
+          emoji.classList.remove("grow");
+          void emoji.offsetWidth; // Trick zum Neustarten der Animation
+          emoji.classList.add("grow");
+
+          // Counter aktualisieren
+          counters[index]++;
+          counterElements[index].textContent = counters[index];
+
+          // Antwort speichern
+          feedbackData.emojiResponses.push({
+            question: questions[currentQuestionIndex],
+            emoji: emoji.textContent,
+          });
+
+          // Nächste Frage anzeigen
+          if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            feedbackQuest.textContent = questions[currentQuestionIndex];
+          } else {
+            feedbackQuest.textContent = "Danke für dein Feedback!";
+          }
+        };
+
+        // Feedback absenden
+        document
+          .querySelector("#submitButton")
+          .addEventListener("click", () => {
+            const feedback = document.querySelector("#feedback").value.trim();
+            if (!feedback) {
+              alert("Bitte gib ein Feedback ein.");
+              return;
+            }
+
+            feedbackData.textResponses.push({
+              question: questions[currentQuestionIndex],
+              response: feedback,
+            });
+
+            console.log("Gespeicherte Antworten:", feedbackData); // Debug: Daten ausgeben (für spätere Speicherung)
+
+            alert(`Danke für dein Feedback: ${feedback}`);
+            document.querySelector("#feedback").value = "";
+          });
+      });
+    </script>
+  </body>
+</html>
