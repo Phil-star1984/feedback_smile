@@ -45,7 +45,6 @@
         cursor: pointer;
         display: inline-block; /* Passt die Größe an den Inhalt an */
         line-height: 1;
-
         transition: transform 0.3s ease;
         user-select: none;
         touch-action: manipulation;
@@ -113,6 +112,58 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+      }
+
+      /* Media Queries iPad */
+      @media (min-width: 768px) and (max-width: 1024px) {
+        .logo-abg img {
+          padding: 2rem;
+          width: 15rem;
+        }
+
+        .counter-container {
+          font-size: 5rem;
+          gap: 25px;
+        }
+
+        .counter {
+          font-size: 30px;
+          padding: 10px 25px;
+          border-radius: 10px;
+        }
+
+        .emoji-container {
+          margin-top: 2rem;
+          margin-bottom: 4rem;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr 1fr;
+          gap: 55px;
+          justify-items: center;
+          align-items: center;
+        }
+
+        .emoji {
+          font-size: 240px; /* Größere Emojis auf iPads */
+        }
+
+        .feedback-box {
+          width: 80%;
+        }
+
+        textarea {
+          height: 80px;
+          width: 90%;
+          font-size: 18px;
+          border-radius: 5px;
+          padding: 10px;
+          border: none;
+          resize: none;
+        }
+
+        .feedback-box h3 {
+          font-size: 22px;
+        }
       }
     </style>
   </head>
